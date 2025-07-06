@@ -13,8 +13,8 @@ To get the app up and running locally:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ecolift.git
-cd ecolift
+git clone https://github.com/fasihuddin200/jeeny-case-study-2.git
+cd jeeny-lite
 ```
 
 ### 2. Install dependencies
