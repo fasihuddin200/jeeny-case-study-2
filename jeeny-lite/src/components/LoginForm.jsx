@@ -16,11 +16,9 @@ export default function LoginForm() {
     const existingUser = users.find((u) => u.email === email);
 
     if (existingUser) {
-      // Login flow
       setCurrentUser(existingUser);
       redirectToDashboard(existingUser.userType);
     } else {
-      // Register flow
       const newUser = {
         id: uuidv4(),
         name,
@@ -40,34 +38,45 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-white">
-      <h2 className="text-2xl font-semibold mb-4">Login or Register</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          className="w-full border px-3 py-2 rounded"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          className="w-full border px-3 py-2 rounded"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <select
-          className="w-full border px-3 py-2 rounded"
-          value={userType}
-          onChange={(e) => setUserType(e.target.value)}
-        >
-          <option value="passenger">Passenger</option>
-          <option value="driver">Driver</option>
-        </select>
+    <div className="w-full max-w-md bg-green-700 p-8 rounded-lg shadow-xl text-white text-center">
+      <h1 className="text-4xl font-bold mb-2 tracking-wide">EcoLift</h1>
+      <p className="italic text-lg mb-6">Travel cheaper! Travel clean!</p>
+
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
+        <div>
+          <label className="block mb-1 text-sm text-white">Name</label>
+          <input
+            className="w-full px-4 py-2 rounded bg-white text-black"
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 text-sm text-white">Email</label>
+          <input
+            className="w-full px-4 py-2 rounded bg-white text-black"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 text-sm text-white">Account Type</label>
+          <select
+            className="w-full px-4 py-2 rounded bg-white text-black"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <option value="passenger">Passenger</option>
+            <option value="driver">Driver</option>
+          </select>
+        </div>
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+          className="w-full bg-white text-green-700 font-semibold py-2 rounded hover:bg-green-100 transition duration-200"
         >
           Continue
         </button>
