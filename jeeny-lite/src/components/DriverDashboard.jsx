@@ -4,6 +4,7 @@ import {
   assignRideToDriver,
   getRides,
   updateDriverRideStatus,
+  addPassengerToCarpoolRide,
 } from "../utils/rideStorage";
 import { getCurrentUser, logoutUser, getUsers } from "../utils/storage";
 import { useNavigate } from "react-router-dom";
@@ -56,6 +57,14 @@ export default function DriverDashboard() {
     );
   };
 
+  const handleSimulateCarpool = (rideId) => {
+    const fakePassengerId = `carpool-passenger-${Math.floor(
+      Math.random() * 10000
+    )}`;
+    addPassengerToCarpoolRide(rideId, fakePassengerId);
+    setRefresh(!refresh);
+  };
+
   const handleLogout = () => {
     logoutUser();
     navigate("/");
@@ -76,8 +85,10 @@ export default function DriverDashboard() {
       </div>
 
       {currentRide ? (
-        <div className="bg-white p-4 rounded shadow space-y-4">
-          <h3 className="text-xl font-semibold">Your Current Ride</h3>
+        <div className="bg-white p-6 rounded-xl shadow space-y-4 max-w-xl mx-auto">
+          <h3 className="text-xl font-semibold text-center">
+            Your Current Ride
+          </h3>
           <p>
             <strong>From:</strong> {currentRide.pickupLocation}
           </p>
@@ -90,31 +101,53 @@ export default function DriverDashboard() {
           <p>
             <strong>Status:</strong> {currentRide.status}
           </p>
-          {currentRide.status === "Accepted" && (
-            <button
-              className="bg-yellow-500 text-white px-4 py-2 rounded"
-              onClick={() => updateStatus("In Progress")}
-            >
-              Start Ride
-            </button>
+          {currentRide.carpoolGroup && currentRide.carpoolGroup.length > 1 && (
+            <p>
+              <strong>Passengers:</strong> {currentRide.carpoolGroup.length}
+            </p>
           )}
-          {currentRide.status === "In Progress" && (
-            <button
-              className="bg-green-600 text-white px-4 py-2 rounded"
-              onClick={() => updateStatus("Completed")}
-            >
-              Complete Ride
-            </button>
-          )}
+
+          <div className="mt-6 flex flex-col items-center space-y-3">
+            {currentRide.carpoolAllowed &&
+              currentRide.status !== "Completed" && (
+                <button
+                  className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
+                  onClick={() => handleSimulateCarpool(currentRide.id)}
+                >
+                  + Add Carpool Passenger
+                </button>
+              )}
+            {currentRide.status === "Accepted" && (
+              <button
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
+                onClick={() => updateStatus("In Progress")}
+              >
+                Start Ride
+              </button>
+            )}
+            {currentRide.status === "In Progress" && (
+              <button
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                onClick={() => updateStatus("Completed")}
+              >
+                Complete Ride
+              </button>
+            )}
+          </div>
         </div>
       ) : (
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold">Available Ride Requests</h3>
+        <div className="space-y-4 max-w-xl mx-auto">
+          <h3 className="text-xl font-semibold text-center">
+            Available Ride Requests
+          </h3>
           {availableRides.length === 0 ? (
-            <p className="text-gray-600">No rides available.</p>
+            <p className="text-gray-600 text-center">No rides available.</p>
           ) : (
             availableRides.map((ride) => (
-              <div key={ride.id} className="bg-white p-4 rounded shadow">
+              <div
+                key={ride.id}
+                className="bg-white p-4 rounded shadow space-y-2"
+              >
                 <p>
                   <strong>From:</strong> {ride.pickupLocation}
                 </p>
@@ -124,12 +157,25 @@ export default function DriverDashboard() {
                 <p>
                   <strong>Type:</strong> {ride.rideType}
                 </p>
+                {ride.carpoolAllowed && (
+                  <p className="text-green-700 text-sm">
+                    Carpooling allowed ✅
+                  </p>
+                )}
                 <button
-                  className="mt-2 bg-blue-600 text-white px-4 py-2 rounded"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                   onClick={() => handleAccept(ride.id)}
                 >
                   Accept Ride
                 </button>
+                {ride.carpoolAllowed && (
+                  <button
+                    className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm"
+                    onClick={() => handleSimulateCarpool(ride.id)}
+                  >
+                    + Add Carpool Passenger
+                  </button>
+                )}
               </div>
             ))
           )}
