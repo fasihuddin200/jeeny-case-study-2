@@ -7,11 +7,14 @@ export default function RideStatus() {
     (ride) => ride.status !== "Completed"
   );
 
-  if (!activeRide) return null;
+  if (!activeRide) {
+    return (
+      <p className="text-gray-600 text-center">No active ride at the moment.</p>
+    );
+  }
 
   return (
-    <div className="bg-blue-50 p-4 rounded shadow">
-      <h3 className="text-xl font-semibold mb-2">Current Ride Status</h3>
+    <div className="space-y-2 text-center text-gray-800">
       <p>
         <strong>From:</strong> {activeRide.pickupLocation}
       </p>
@@ -24,6 +27,14 @@ export default function RideStatus() {
       <p>
         <strong>Status:</strong> {activeRide.status}
       </p>
+
+      {/* Show carpool count only if more than 1 person is in the group */}
+      {activeRide.carpoolGroup && activeRide.carpoolGroup.length > 1 && (
+        <p>
+          <strong>Carpool Group Size:</strong> {activeRide.carpoolGroup.length}{" "}
+          passengers
+        </p>
+      )}
     </div>
   );
 }
