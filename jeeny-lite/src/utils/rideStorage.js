@@ -33,3 +33,17 @@ export const assignRideToDriver = (rideId, driverId) => {
 export const updateDriverRideStatus = (rideId, newStatus) => {
   updateRideStatus(rideId, newStatus);
 };
+
+export const addPassengerToCarpoolRide = (rideId, passengerId) => {
+  const rides = getRides().map((ride) => {
+    if (ride.id === rideId) {
+      return {
+        ...ride,
+        carpoolGroup: [...(ride.carpoolGroup || []), passengerId],
+      };
+    }
+    return ride;
+  });
+
+  localStorage.setItem("rides", JSON.stringify(rides));
+};
